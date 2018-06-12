@@ -41,8 +41,6 @@ const BurgerIngredient = (props) => {
       return null;
   }
 
-  console.log(classes);
-
   return (
     <div className={classes[className]}></div>
   )

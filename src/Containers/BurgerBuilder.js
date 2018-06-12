@@ -5,12 +5,25 @@ import Aux from '../HOC/Aux';
 import '../Components/Burger/BurgerIngredients/BurgerIngredient.css'
 
 class BurgerBuilder extends Component {
+
+  constructor() {
+    super();
+
+    this.state = {
+      ingredients: {
+        salad: 1,
+        cheese: 2,
+        bacon:1,
+        meat: 2
+      }
+    }
+  }
   
   render() {
     return (
       <Aux>
         <div>Build your burger</div>
-        <Burger />
+        <Burger ingredients={this.state.ingredients}/>
       </Aux>
     )
   }
