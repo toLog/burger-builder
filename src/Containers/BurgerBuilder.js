@@ -18,11 +18,20 @@ class BurgerBuilder extends Component {
     }
   }
 
-  incrementIngredient = () => {
-    const ing = 'salad';
+  incrementIngredient = (ing) => {
+    //const ing = 'salad';
     
     const ings = {...this.state.ingredients};
     ings[ing]++;
+    console.log(ings);
+
+    this.setState({ingredients: ings});
+  }
+
+  decrementIngredients = (ing) => {
+
+    const ings = {...this.state.ingredients};
+    ings[ing] < 1 ? ings[ing]: ings[ing]--;
     console.log(ings);
 
     this.setState({ingredients: ings});
@@ -33,7 +42,7 @@ class BurgerBuilder extends Component {
       <Aux>
         <div>Build your burger</div>
         <Burger ingredients={this.state.ingredients} />
-        <BuildControls ingredients={this.state.ingredients} inc={this.incrementIngredient}/>
+        <BuildControls ingredients={this.state.ingredients} inc={this.incrementIngredient} dec={this.decrementIngredients}/>
         <button onClick={this.incrementIngredient}>inc</button>
       </Aux>
     )
