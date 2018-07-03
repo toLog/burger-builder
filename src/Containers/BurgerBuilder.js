@@ -3,6 +3,13 @@ import Burger from '../Components/Burger/Burger';
 import BuildControls from '../Components/Burger/BuildControls/BuildControls'
 import Aux from '../HOC/Aux';
 
+const INGREDIENT_PRICES = {
+  salad: 1,
+  bacon: 2,
+  cheese: 1.5,
+  meat: 3
+};
+
 class BurgerBuilder extends Component {
 
   constructor() {
@@ -14,27 +21,29 @@ class BurgerBuilder extends Component {
         bacon:0,
         cheese: 0,
         meat: 0
-      }
+      },
+      price: 4
     }
   }
 
   incrementIngredient = (ing) => {
-    //const ing = 'salad';
-    
     const ings = {...this.state.ingredients};
-    ings[ing]++;
-    console.log(ings);
+    const oldPriceTotal = this.state.price;
 
-    this.setState({ingredients: ings});
+    ings[ing]++;
+
+    this.setState({ingredients: ings, price: oldPriceTotal + INGREDIENT_PRICES[ing]});
   }
 
   decrementIngredients = (ing) => {
-
     const ings = {...this.state.ingredients};
-    ings[ing] < 1 ? ings[ing]: ings[ing]--;
-    console.log(ings);
+    const oldPriceTotal = this.state.price;
 
-    this.setState({ingredients: ings});
+    if (ings[ing] < 1) return;
+
+    ings[ing]--;
+
+    this.setState({ingredients: ings, price: oldPriceTotal - INGREDIENT_PRICES[ing]});
   }
   
   render() {
@@ -42,8 +51,7 @@ class BurgerBuilder extends Component {
       <Aux>
         <div>Build your burger</div>
         <Burger ingredients={this.state.ingredients} />
-        <BuildControls ingredients={this.state.ingredients} inc={this.incrementIngredient} dec={this.decrementIngredients}/>
-        <button onClick={this.incrementIngredient}>inc</button>
+        <BuildControls ingredients={this.state.ingredients} price={this.state.price} inc={this.incrementIngredient} dec={this.decrementIngredients}/>
       </Aux>
     )
   }
