@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import Burger from '../Components/Burger/Burger';
 import BuildControls from '../Components/Burger/BuildControls/BuildControls'
 import Aux from '../HOC/Aux';
+import Summary from '../Components/Burger/Summary/Summary';
+import OrderSummary from '../Components/Burger/Summary/OrderSummary/OrderSummary';
 
 const INGREDIENT_PRICES = {
   salad: 1,
@@ -9,6 +11,8 @@ const INGREDIENT_PRICES = {
   cheese: 1.5,
   meat: 3
 };
+
+const BASE_PRICE = 4.00;
 
 class BurgerBuilder extends Component {
 
@@ -22,7 +26,7 @@ class BurgerBuilder extends Component {
         cheese: 0,
         meat: 0
       },
-      price: 4
+      price: BASE_PRICE
     }
   }
 
@@ -49,6 +53,9 @@ class BurgerBuilder extends Component {
   render() {
     return (
       <Aux>
+        <Summary>
+          <OrderSummary ingredients={this.state.ingredients} prices={INGREDIENT_PRICES} totalPrice={this.state.price}/>
+        </Summary>
         <div>Build your burger</div>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls ingredients={this.state.ingredients} price={this.state.price} inc={this.incrementIngredient} dec={this.decrementIngredients}/>

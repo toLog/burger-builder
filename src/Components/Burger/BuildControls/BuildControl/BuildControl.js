@@ -14,7 +14,7 @@ const buildControl = (props) => {
   return (
     <div className={classes.BuildControl}>
       <button className={classes.Less} onClick={() => props.dec(ing)}>-</button>
-      <div className={classes.Label}>{ing.charAt(0).toUpperCase().concat(ing.slice(1))}</div>
+      <div className={classes.Label}>{ing.charAt(0).toUpperCase().concat(ing.slice(1))}</div> {/* can use css capitalize */}
       <button className={classes.More} onClick={() => props.inc(ing)}>+</button>
     </div>
   )
