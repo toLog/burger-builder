@@ -26,7 +26,8 @@ class BurgerBuilder extends Component {
         cheese: 0,
         meat: 0
       },
-      price: BASE_PRICE
+      price: BASE_PRICE,
+      showSummary: false
     }
   }
 
@@ -49,16 +50,35 @@ class BurgerBuilder extends Component {
 
     this.setState({ingredients: ings, price: oldPriceTotal - INGREDIENT_PRICES[ing]});
   }
+
+  showSummaryHandler = () => {
+    this.setState({showSummary: true});
+  }
+
+  hideSummaryHandler = () => {
+    this.setState({showSummary: false});
+  }
   
   render() {
     return (
       <Aux>
-        <Summary>
-          <OrderSummary ingredients={this.state.ingredients} prices={INGREDIENT_PRICES} totalPrice={this.state.price}/>
+        <Summary show={this.state.showSummary} hide={this.hideSummaryHandler}>
+          <OrderSummary 
+            ingredients={this.state.ingredients} 
+            prices={INGREDIENT_PRICES} 
+            totalPrice={this.state.price} 
+            show={this.state.showSummary}
+            hide={this.hideSummaryHandler}
+          />
         </Summary>
         <div>Build your burger</div>
         <Burger ingredients={this.state.ingredients} />
-        <BuildControls ingredients={this.state.ingredients} price={this.state.price} inc={this.incrementIngredient} dec={this.decrementIngredients}/>
+        <BuildControls 
+          ingredients={this.state.ingredients} 
+          price={this.state.price} 
+          inc={this.incrementIngredient} 
+          dec={this.decrementIngredients}
+          showSummary={this.showSummaryHandler}/>
       </Aux>
     )
   }
