@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
+import Axios from '../axios-orders';
 import Burger from '../Components/Burger/Burger';
 import BuildControls from '../Components/Burger/BuildControls/BuildControls'
 import Aux from '../HOC/Aux';
-import Summary from '../Components/Burger/Summary/Summary';
-import OrderSummary from '../Components/Burger/Summary/OrderSummary/OrderSummary';
+import PopDown from '../Components/General/PopDown/PopDown';
+import OrderSummary from '../Components/Burger/OrderSummary/OrderSummary';
+import Spinner from '../Components/General/Spinner/Spinner';
+import withErrorHandler from '../HOC/withErrorHandler';
 
 const INGREDIENT_PRICES = {
   salad: 1,
@@ -22,13 +25,23 @@ class BurgerBuilder extends Component {
     this.state = {
       ingredients: {
         salad: 0,
-        bacon:0,
+        bacon: 0,
         cheese: 0,
         meat: 0
       },
       price: BASE_PRICE,
-      showSummary: false
+      showSummary: false,
+      sendingOrder: false
     }
+  }
+
+  componentDidMount() {
+    Axios.get('/ingredients.json')
+      .then(response => {
+        this.setState({ingredients: response.data});
+      })
+      .catch(error => {//do something
+      });
   }
 
   incrementIngredient = (ing) => {
@@ -58,19 +71,63 @@ class BurgerBuilder extends Component {
   hideSummaryHandler = () => {
     this.setState({showSummary: false});
   }
+
+  checkoutHandler = () => {
+   
+    const order = {
+      ingredients: this.state.ingredients,
+      price: this.state.price,
+      customer: {
+        name: 'Jog Manson',
+        id: '000000000',
+        address: {
+          unitNo: null,
+          streetNo: 999,
+          streetName: 'Jogging st',
+          city: 'Runsville',
+          zip: 9999
+        },
+        email: 'jogman@test.com.cz',
+        delivery: true
+      }
+    }
+
+    Axios.post('/orders.json', order)
+      .then(response => {
+        this.setState({sendingOrder: false});
+        console.log(response);
+        this.setState({showSummary: false});
+      })
+      .catch(error => {
+        this.setState({sendingOrder: false});
+        console.error(error);
+      });
+
+    this.setState({sendingOrder: true});
+  }
+
   
   render() {
+
+    let summary = (
+      <OrderSummary 
+        ingredients={this.state.ingredients} 
+        prices={INGREDIENT_PRICES} 
+        totalPrice={this.state.price} 
+        show={this.state.showSummary}
+        hide={this.hideSummaryHandler}
+        checkout={this.checkoutHandler}/>
+    )
+    
+        if(this.state.sendingOrder) {
+          summary = <Spinner />
+        }
+
     return (
       <Aux>
-        <Summary show={this.state.showSummary} hide={this.hideSummaryHandler}>
-          <OrderSummary 
-            ingredients={this.state.ingredients} 
-            prices={INGREDIENT_PRICES} 
-            totalPrice={this.state.price} 
-            show={this.state.showSummary}
-            hide={this.hideSummaryHandler}
-          />
-        </Summary>
+        <PopDown show={this.state.showSummary} hide={this.hideSummaryHandler}>
+          {summary}
+        </PopDown>
         <div>Build your burger</div>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls 
@@ -84,4 +141,5 @@ class BurgerBuilder extends Component {
   }
 }
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, Axios);
+//export default BurgerBuilder

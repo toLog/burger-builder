@@ -1,6 +1,6 @@
 import React from 'react';
 import NavItems from '../NavItems/NavItems';
-import Backdrop from '../../Burger/Summary/Backdrop/Backdrop'; // needs to be moved to general
+import Backdrop from '../../General/Backdrop/Backdrop';
 import Aux from '../../../HOC/Aux';
 
 import Logo from '../../Logo/Logo';
